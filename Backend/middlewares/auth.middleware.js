@@ -6,8 +6,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import Captain from "../models/captain.model.js";
 
-
+//for user
 const verifyJWT = asyncHandler(async(req, res, next) => {
 
 try {
@@ -33,6 +34,34 @@ try {
     throw new ApiError(401, error?.message || "Invalid access token")
 }
  
-})  
+}) 
 
-export {verifyJWT};
+//for captain
+const verifyCaptainJWT = asyncHandler(async(req, res, next) => {
+    try {
+        
+        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+
+        if(!token){
+            throw new ApiError(401, "Unauthorized request")
+        }
+
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+        const captain = await Captain.findById(decodedToken?._id).select("-password -refreshToken");
+
+        if(!captain){
+            throw new ApiError(401, "Invalid access token")
+        }
+
+        req.captain = captain;
+
+        next();
+
+    } catch (error) {
+
+        throw new ApiError(401, error?.message || "Invalid access token")
+    }
+})
+
+export {verifyJWT, verifyCaptainJWT};
