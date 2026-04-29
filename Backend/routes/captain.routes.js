@@ -1,5 +1,5 @@
 import express from "express";
-import { registerCaptain, loginCaptain, logoutCaptain } from "../controllers/captain.controller.js";
+import { registerCaptain, loginCaptain, logoutCaptain,  getCaptainProfile} from "../controllers/captain.controller.js";
 import { registerCaptainValidation, loginCaptainValidation } from "../validators/captain.Validator.js";
 import { validate } from "../middlewares/validator.middleware.js";
 import {verifyCaptainJWT} from "../middlewares/auth.middleware.js";
@@ -10,8 +10,9 @@ capRouter.post("/register", registerCaptainValidation(), validate, registerCapta
 
 capRouter.post("/login", loginCaptainValidation(), validate, loginCaptain);
 
+//secure routes
 capRouter.post("/logout", verifyCaptainJWT, logoutCaptain);
 
-// capRouter.get("/profile", getCaptainProfile);
+capRouter.get("/profile", verifyCaptainJWT, getCaptainProfile);
 
 export default capRouter;
