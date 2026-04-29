@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 
 const captainSchema = new mongoose.Schema({
-    fullName: {
+    fullname: {
         firstname: {
             type: String,
             required: true,
@@ -121,3 +121,5 @@ captainSchema.methods.generateRefreshToken = function(){
 }
 
 const Captain = mongoose.model("Captain", captainSchema);   
+
+export default Captain;

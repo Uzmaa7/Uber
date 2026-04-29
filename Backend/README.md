@@ -177,3 +177,64 @@ No request body required.
 #### Error Responses
 - 401 Unauthorized: Invalid or missing access token
 - 500 Internal Server Error: Server error during profile fetch
+
+## Register Captain Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/captains/register`
+
+### Description
+This endpoint allows captains to register by providing their personal details and vehicle information. The password is hashed before storing in the database.
+
+### Request Body
+The request must be in JSON format with the following fields:
+
+- `fullname` (object, required):
+  - `firstname` (string, required): Minimum 3 characters
+  - `lastname` (string, optional): Minimum 3 characters if provided
+- `email` (string, required): Must be a valid email address
+- `password` (string, required): Minimum 6 characters
+- `contact` (string, required): Captain's contact number
+- `vehicle` (object, required):
+  - `color` (string, required): Minimum 3 characters
+  - `plate` (string, required): Vehicle plate number, minimum 3 characters
+  - `capacity` (integer, required): Vehicle capacity (minimum 1)
+  - `vehicleType` (string, required): One of "car", "motorcycle", or "auto"
+
+### Response
+
+#### Success (201 Created)
+```json
+{
+  "statusCode": 201,
+  "data": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "Mike",
+      "lastname": "Johnson"
+    },
+    "email": "mike.johnson@example.com",
+    "contact": "1234567890",
+    "vehicle": {
+      "color": "Black",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive",
+    "socketId": null,
+    "createdAt": "2023-10-01T00:00:00.000Z",
+    "updatedAt": "2023-10-01T00:00:00.000Z"
+  },
+  "message": "Captain registered successfully",
+  "success": true
+}
+```
+
+#### Error Responses
+- 400 Bad Request: Validation errors (e.g., invalid email, short password) or missing required fields
+- 400 Bad Request: Captain with the same email already exists
+- 500 Internal Server Error: Server error during registration
