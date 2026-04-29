@@ -98,3 +98,82 @@ Additionally, `accessToken` and `refreshToken` are set as HTTP-only, secure cook
 - 400 Bad Request: Validation errors (e.g., invalid email, short password) or missing required fields
 - 401 Unauthorized: Invalid email or password
 - 500 Internal Server Error: Server error during login
+
+## Logout User Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/users/logout`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint logs out the authenticated user by clearing the refresh token from the database and removing the access and refresh token cookies.
+
+### Request Body
+No request body required.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {},
+  "message": "User logged Out",
+  "success": true
+}
+```
+Additionally, `accessToken` and `refreshToken` cookies are cleared.
+
+#### Error Responses
+- 401 Unauthorized: Invalid or missing access token
+- 500 Internal Server Error: Server error during logout
+
+## Get User Profile Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/users/profile`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint retrieves the profile information of the authenticated user.
+
+### Request Body
+No request body required.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "user": {
+      "_id": "user_id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "socketId": null,
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    }
+  },
+  "message": "User Fetched successfully",
+  "success": true
+}
+```
+
+#### Error Responses
+- 401 Unauthorized: Invalid or missing access token
+- 500 Internal Server Error: Server error during profile fetch
