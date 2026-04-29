@@ -54,6 +54,19 @@ const registerCaptainValidation = () => {
             .bail()
             .isIn(["car", "motorcycle", "auto"]).withMessage('Invalid vehicle type')
     ]        
+}; 
+
+const loginCaptainValidation = () => {
+    return [
+        body("email")
+            .isEmail().withMessage("Invalid Email"),
+
+        body("password")
+            .isString().withMessage("Password must be a string")
+            .bail()
+            .isLength({min:6}).withMessage("Password must be atleast 6 character")
+    ]
 };
 
-export {registerCaptainValidation};
+
+export {registerCaptainValidation, loginCaptainValidation};
