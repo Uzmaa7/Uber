@@ -13,6 +13,6 @@ userRouter.post("/login", loginValidation(), validate, login);
 //secured routes
 userRouter.post("/logout", verifyJWT, logout);
 
-userRouter.get("/profile", getUserProfile);
+userRouter.get("/profile", verifyJWT,  getUserProfile);
 
 export default userRouter; 

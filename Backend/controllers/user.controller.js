@@ -99,8 +99,8 @@ const logout = asyncHandler(async(req,res) => {
 
     return res
     .status(200)
-    .clearCookie("accessToken", accessToken, options)
-    .clearCookie("refreshToken", refreshToken, options)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
     .json(
         new ApiResponse(200, {}, "User logged out successfully")
     )
@@ -108,7 +108,9 @@ const logout = asyncHandler(async(req,res) => {
 })
 
 const getUserProfile = asyncHandler(async(req, res) => {
-
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {user: req.user}, "User Fetched successfully "))
 })
 
 export {register, login, logout, getUserProfile};
