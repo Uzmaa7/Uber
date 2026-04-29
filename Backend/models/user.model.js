@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config({
+    path: "./.env"
+})
 import mongoose from "mongoose";
 import bcrypt from  "bcrypt";
 import jwt from "jsonwebtoken";

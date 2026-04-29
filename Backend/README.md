@@ -49,3 +49,52 @@ The request must be in JSON format with the following fields:
 - 400 Bad Request: Validation errors (e.g., invalid email, short password) or missing required fields
 - 409 Conflict: User with the same email already exists
 - 500 Internal Server Error: Server error during registration
+
+## Login User Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/users/login`
+
+### Description
+This endpoint allows existing users to log in by providing their email and password. Upon successful login, access and refresh tokens are generated and set as HTTP-only cookies.
+
+### Request Body
+The request must be in JSON format with the following fields:
+
+- `email` (string, required): Must be a valid email address
+- `password` (string, required): Minimum 6 characters
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "user": {
+      "_id": "user_id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "socketId": null,
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    },
+    "accessToken": "jwt_access_token",
+    "refreshToken": "jwt_refresh_token"
+  },
+  "message": "User logged in Successfully",
+  "success": true
+}
+```
+Additionally, `accessToken` and `refreshToken` are set as HTTP-only, secure cookies.
+
+#### Error Responses
+- 400 Bad Request: Validation errors (e.g., invalid email, short password) or missing required fields
+- 401 Unauthorized: Invalid email or password
+- 500 Internal Server Error: Server error during login
