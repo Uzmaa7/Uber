@@ -4,6 +4,7 @@ import Home from "./pages/Home.jsx";
 import UserLogin from "./pages/UserLogin.jsx"
 import UserSignup from "./pages/UserSignup.jsx";
 import CaptainLogin from "./pages/CaptainLogin.jsx";
+import CaptainSignup from "./pages/CaptainSignup.jsx";
 
 function App() {
   return (
