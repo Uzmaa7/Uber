@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 
 import axios from "axios";
-import {UserDataContext} from '../context/UserContext'
+import {useUserContext} from '../context/UserContext'
 
 
 
@@ -17,7 +17,7 @@ function UserSignup() {
 
     const navigate = useNavigate()
 
-    const { user, setUser } = useContext(UserDataContext)
+    const { user, setUser, authToken, setAuthToken  } = useUserContext()
 
 
     const submitHandler = async (e) => {

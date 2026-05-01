@@ -1,9 +1,16 @@
 import React, { createContext, useState } from 'react'
 
-export const UserDataContext = createContext()
+const UserContext = createContext(null);
 
+export const useUserContext = () => {
+    const context = useContext(UserContext);
+    if (!context) {
+        throw new Error("useUserContext must be used within UserProvider");
+    }
+    return context;
+};
 
-const UserContext = ({ children }) => {
+const UserContextProvider = ({ children }) => {
 
     const [ user, setUser ] = useState({
         email: '',
@@ -13,9 +20,12 @@ const UserContext = ({ children }) => {
         }
     })
 
+    const [authToken, setAuthToken] = useState(null); 
+    const [isAuthReady, setIsAuthReady] = useState(false);
+
     return (
         <div>
-            <UserDataContext.Provider value={{ user, setUser }}>
+            <UserDataContext.Provider value={{ user, setUser, authToken, setAuthToken, , setAuthToken, isAuthReady, setIsAuthReady }}>
                 {children}
             </UserDataContext.Provider>
         </div>

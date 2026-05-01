@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import axios from "axios";
-import {UserDataContext} from '../context/UserContext'
+import {useUserContext} from '../context/UserContext'
 
 
 const UserLogin = () => {
@@ -14,7 +14,7 @@ const UserLogin = () => {
   const navigate = useNavigate()
 
 
-  const { user, setUser } = useContext(UserDataContext)
+  const { user, setUser, authToken, setAuthToken } =  useUserContext()
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -28,11 +28,12 @@ const UserLogin = () => {
 
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
 
-    // console.log("Response=>", response)
+    console.log("Response=>", response)
 
     if(response.status === 200){
-      const data = response.data.data
-      setUser(data.user)
+      const userData = response.data.data
+      setUser(userData.user)
+      setAuthToken(userData.accessToken)
       navigate("/home")
     }
 

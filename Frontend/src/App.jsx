@@ -6,6 +6,7 @@ import UserSignup from "./pages/UserSignup.jsx";
 import CaptainLogin from "./pages/CaptainLogin.jsx";
 import CaptainSignup from "./pages/CaptainSignup.jsx";
 import Home from "./pages/Home.jsx";
+import UserProtectedWrapper from "./pages/UserProtectedWrapper.jsx"
 
 function App() {
   return (
@@ -15,7 +16,11 @@ function App() {
 
         <Route path="/" element={<Start/>} />
 
-        <Route path="/home" element={<Home/>} />
+        <Route path="/home" element={
+            <UserProtectedWrapper>
+                <Home/>
+            </UserProtectedWrapper>
+              } />
 
         <Route path="/login" element={<UserLogin/>} />
 
