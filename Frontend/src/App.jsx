@@ -8,6 +8,7 @@ import CaptainSignup from "./pages/CaptainSignup.jsx";
 import Home from "./pages/Home.jsx";
 import UserProtectedWrapper from "./pages/UserProtectWrapper.jsx"
 import UserLogout from "./pages/UserLogout.jsx";
+import CaptainHome from "./pages/CaptainHome.jsx";
 
 
 function App() {
@@ -18,11 +19,13 @@ function App() {
 
         <Route path="/" element={<Start/>} />
 
-        <Route path="/home" element={
+        <Route path="/home" 
+          element={
             <UserProtectedWrapper>
                 <Home/>
             </UserProtectedWrapper>
-              } />
+          } 
+        />
 
         <Route path="/login" element={<UserLogin/>} />
 
@@ -37,6 +40,8 @@ function App() {
                 <UserLogout/>
             </UserProtectedWrapper>
               } />
+
+        <Route path="/captain-home" element={<CaptainHome/>} />
 
       </Routes>
 
