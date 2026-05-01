@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 
 const UserContext = createContext(null);
 
@@ -22,6 +22,11 @@ const UserContextProvider = ({ children }) => {
 
     const [authToken, setAuthToken] = useState(null); 
     const [isAuthReady, setIsAuthReady] = useState(false);
+
+    useEffect(() => {
+        
+        setIsAuthReady(true);
+    }, []);
 
     return (
         <div>
