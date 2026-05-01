@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useState, useContext } from 'react'
 
 const UserContext = createContext(null);
 
@@ -25,11 +25,11 @@ const UserContextProvider = ({ children }) => {
 
     return (
         <div>
-            <UserDataContext.Provider value={{ user, setUser, authToken, setAuthToken, , setAuthToken, isAuthReady, setIsAuthReady }}>
+            <UserContext.Provider value={{ user, setUser, authToken, setAuthToken,  isAuthReady, setIsAuthReady }}>
                 {children}
-            </UserDataContext.Provider>
+            </UserContext.Provider>
         </div>
     )
 }
 
-export default UserContext
+export default UserContextProvider
