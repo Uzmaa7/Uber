@@ -5,6 +5,7 @@ import UserLogin from "./pages/UserLogin.jsx"
 import UserSignup from "./pages/UserSignup.jsx";
 import CaptainLogin from "./pages/CaptainLogin.jsx";
 import CaptainSignup from "./pages/CaptainSignup.jsx";
+import Home from "./pages/Home.jsx";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Start/>} />
+
+        <Route path="/home" element={<Home/>} />
 
         <Route path="/login" element={<UserLogin/>} />
 
