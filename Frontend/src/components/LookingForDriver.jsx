@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 
-const ConfirmRide = (props) => {
+const LookingForDriver = (props) => {
     return (
         <div>
             <h5 className='p-1 text-center w-[93%] absolute top-0' onClick={() => {
                 props.setConfirmRidePanel(false)
             }}> <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>  </h5>
 
-            <h3 className='text-2xl font-semibold mb-5'>Confirm your Ride</h3>
+            <h3 className='text-2xl font-semibold mb-5'>Looking for a Driver</h3>
 
 
 
@@ -40,17 +40,10 @@ const ConfirmRide = (props) => {
                 </div>
 
 
-                <button 
-                    onClick={() => { 
-                        props.setVehicleFound(true)
-                        props.setConfirmRidePanel(false)
-                    }} 
-                    className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>
-                    Confirm
-                </button>
+                
             </div>
         </div>
     )
 }
 
-export default ConfirmRide
+export default LookingForDriver;
