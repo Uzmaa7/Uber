@@ -169,6 +169,7 @@ const Home = () => {
 
                         setPanelOpen={setPanelOpen}
                         setVehiclePanel={setVehiclePanel}
+                        vehiclePanel={vehiclePanel}
 
                     />
                 </div>
