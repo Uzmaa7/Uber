@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CaptainContext = createContext(null)
 
@@ -18,6 +18,11 @@ export const CaptainContextProvider = ({children}) => {
     const [ error, setError ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(false);
     const [isAuthReady, setIsAuthReady] = useState(false); // for tracking if auth bootstrap is done so that protected routes can wait for refresh token check
+
+    useEffect(() => {
+            
+            setIsAuthReady(true);
+        }, []);
 
     return (
         <CaptainContext.Provider value={{captain, setCaptain, authToken, setAuthToken, error, setError, isLoading, setIsLoading, isAuthReady, setIsAuthReady}}>
