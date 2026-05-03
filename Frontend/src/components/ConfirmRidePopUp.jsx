@@ -5,6 +5,8 @@ import axios from 'axios'
 
 const ConfirmRidePopUp = (props) => {
 
+    
+
 
     return (
         <div>
@@ -45,10 +47,14 @@ const ConfirmRidePopUp = (props) => {
                 </div>
 
                 <div className='mt-6 w-full'>
-                    <form >
+                    <form onSubmit={(e) => {
+                        submitHander(e)
+                    }}>
+
+                        <input className='bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full' type="text" placeholder='Enter OTP' />
                         
 
-                        <button className='w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg'>Confirm</button>
+                        <Link to="/captain-riding" className='w-full mt-5 text-lg flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg'>Confirm</Link>
                         <button onClick={() => {
                             props.setConfirmRidePopupPanel(false)
                             props.setRidePopupPanel(false)
