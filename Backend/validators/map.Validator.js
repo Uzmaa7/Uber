@@ -23,4 +23,13 @@ const getDistanceTimeValidation = () => {
     ]
 }
 
-export {getCoordinatesValidation, getDistanceTimeValidation};
+const getAutoCompleteSuggestionsValidation = () => {
+    return[
+        query("input")
+            .isString().withMessage("input must be string")
+            .bail()
+            .isLength({min:3}).withMessage("length must be 3")
+    ]
+}
+
+export {getCoordinatesValidation, getDistanceTimeValidation, getAutoCompleteSuggestionsValidation};

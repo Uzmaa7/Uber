@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { getAddressCoordinateService, getDistanceTimeService } from "../services/map.service.js";
+import { getAddressCoordinateService, getDistanceTimeService, getAutoCompleteSuggestionsService } from "../services/map.service.js";
 
 const getCoordinates = asyncHandler(async(req, res) => {
 
@@ -29,4 +29,13 @@ const getDistanceTime = asyncHandler(async(req, res) => {
     return res.status(200).json(new ApiResponse(200, { distanceTime}, 'Distance and Time fetched successfully' ,));
 })
 
-export {getCoordinates, getDistanceTime};;
+const getAutoCompleteSuggestions = asyncHandler(async(req, res) => {
+
+    const {input} = req.query;
+
+    const suggestions = await getAutoCompleteSuggestionsService(input);
+
+    return res.status(200).json(new ApiResponse(200, { suggestions}, 'Auto-complete suggestions fetched successfully'));
+})
+
+export {getCoordinates, getDistanceTime, getAutoCompleteSuggestions};;
