@@ -10,6 +10,7 @@ import userRouter from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 import capRouter from "./routes/captain.routes.js";
 import mapRouter from "./routes/map.routes.js";
+import rideRouter from "./routes/ride.routes.js";
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/captains", capRouter);
 app.use("/api/v1/maps", mapRouter);
+app.use("/api/v1/rides", rideRouter);
 
 export default app;
