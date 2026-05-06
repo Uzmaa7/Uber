@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { getAddressCoordinateService, getDistanceTimeService, getAutoCompleteSuggestionsService } from "../services/map.service.js";
 
+
 const getCoordinates = asyncHandler(async(req, res) => {
 
     const {address} = req.query

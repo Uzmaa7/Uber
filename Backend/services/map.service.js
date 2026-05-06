@@ -50,6 +50,8 @@ const getDistanceTimeService = async (origin, destination) => {
                 throw new ApiError(404, "No route found between the origin and destination");
             };
 
+            // console.log(response.data.rows[ 0 ].elements[ 0 ]);
+            // console.log("Distance and Time => ", response.data.rows);
             return response.data.rows[ 0 ].elements[ 0 ];
         }
 
