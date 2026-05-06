@@ -44,6 +44,14 @@ export async function getFare(pickup, destination) {
 
 }
 
+function getOtp(num) {
+    function generateOtp(num) {
+        const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString();
+        return otp;
+    }
+    return generateOtp(num);
+}
+
 
 export const createRideService = async ({userId, pickup, destination, vehicleType}) => {
 
@@ -55,11 +63,12 @@ export const createRideService = async ({userId, pickup, destination, vehicleTyp
 
     // console.log("Calculated fare:", fare);
 
-    const ride = Ride.create({
+    const ride = await Ride.create({
         user:userId,
         pickup,
         destination,
-        fare: fare[vehicleType]
+        fare: fare[vehicleType],
+        otp: getOtp(6)
     })
 
     return ride;
