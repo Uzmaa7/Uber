@@ -22,6 +22,10 @@ const Home = () => {
     
 
     const vehiclePanelRef = useRef(null)
+    const [vehiclePanel, setVehiclePanel] = useState(false)
+
+    const [fare, setFare] = useState({})
+
     const confirmRidePanelRef = useRef(null)
 
     const panelRef = useRef(null)
@@ -30,7 +34,7 @@ const Home = () => {
     const vehicleFoundRef = useRef(null)
      const waitingForDriverRef = useRef(null)
 
-    const [vehiclePanel, setVehiclePanel] = useState(false)
+    
     const [vehicleType, setVehicleType] = useState(null)
     const [confirmRidePanel, setConfirmRidePanel] = useState(false)
     const [vehicleFound, setVehicleFound] = useState(false)
@@ -161,6 +165,31 @@ const Home = () => {
         }
     }
 
+     const findTrip = async () => {
+        setPanelOpen(false)
+        setVehiclePanel(true)
+
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+                params : {
+                    pickup : pickup,
+                    destination : destination
+                },
+                headers : {
+                    Authorization : `Bearer ${authToken}`
+                },
+                withCredentials : true
+            })
+
+            // console.log('Fare => ', response.data.data.fare)
+
+            setFare(response.data.data.fare)
+
+        } catch (error) {
+            console.log('Error while getting fare :', error.message)
+        }
+    }
+
     return (
         <div className='h-screen relative overflow-hidden'>
             {/* Logo */}
@@ -216,8 +245,9 @@ const Home = () => {
                             type="text"
                             placeholder='Enter your destination' />
                     </form>
-                    <button
 
+                    <button
+                        onClick={findTrip}
                         className='bg-black text-white px-4 py-2 rounded-lg mt-3 w-full'>
                         Find Trip
                     </button>
@@ -244,8 +274,14 @@ const Home = () => {
 
             <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12'>
                 <VehiclePanel
+                    fare = {fare}
+                    
+                    setVehiclePanel={setVehiclePanel}
+                    setPanelOpen={setPanelOpen}
+
                     selectVehicle={setVehicleType}
-                    setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+                    setConfirmRidePanel={setConfirmRidePanel}
+                />
             </div>
 
             <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
