@@ -2,6 +2,9 @@ import React from 'react'
 
 const VehiclePanel = (props) => {
     // console.log("Fare in Vehicle Panel => ", props.fare.car)
+    
+
+    
     return (
         <div>
 
@@ -13,7 +16,11 @@ const VehiclePanel = (props) => {
             <h3 className='text-2xl font-semibold mb-5'>Choose a Vehicle</h3>
 
 
-            <div onClick={() => {props.setConfirmRidePanel(true)}}
+            <div onClick={() => {
+                props.setConfirmRidePanel(true)
+                props.setVehiclePanel(false)
+                props.setVehicleType('car')
+            }}
                 className='flex border-2 active:border-black  mb-2 rounded-xl w-full p-3  items-center justify-between'>
 
                 <img className='h-10' src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg" alt="" />
@@ -30,7 +37,11 @@ const VehiclePanel = (props) => {
             </div>
 
 
-            <div onClick={() => {props.setConfirmRidePanel(true)}}
+            <div onClick={() => {
+                props.setConfirmRidePanel(true)
+                props.setVehiclePanel(false)
+                props.setVehicleType('motorcycle')
+            }}
                 className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between'>
 
                  <img className='h-10' src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=368/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9mY2RkZWNhYS0yZWVlLTQ4ZmUtODdmMC02MTRhYTdjZWU3ZDMucG5n" alt="" />
@@ -45,7 +56,11 @@ const VehiclePanel = (props) => {
 
             </div>
 
-            <div onClick={() => {props.setConfirmRidePanel(true)}}
+            <div onClick={() => {
+                props.setConfirmRidePanel(true)
+                props.setVehiclePanel(false)
+                props.setVehicleType('auto')
+            }}
                 className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-between'>
 
                 <img className='h-10' src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=368/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy8xZGRiOGM1Ni0wMjA0LTRjZTQtODFjZS01NmExMWEwN2ZlOTgucG5n" alt="" />

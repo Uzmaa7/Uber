@@ -124,7 +124,7 @@ const Home = () => {
     }, [ waitingForDriver ])
 
 
-     const handlePickUpChange = async (e) => {
+    const handlePickUpChange = async (e) => {
         setPickup(e.target.value)
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
@@ -165,7 +165,7 @@ const Home = () => {
         }
     }
 
-     const findTrip = async () => {
+    const findTrip = async () => {
         setPanelOpen(false)
         setVehiclePanel(true)
 
@@ -188,6 +188,19 @@ const Home = () => {
         } catch (error) {
             console.log('Error while getting fare :', error.message)
         }
+    }
+
+    const createRide = async () => {
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,
+            {pickup, destination, vehicleType},
+            {
+                headers : {
+                    Authorization : `Bearer ${authToken}`
+                }
+            }
+        )
+
+        // console.log("Create Ride Response => ", response.data.data)
     }
 
     return (
@@ -281,12 +294,22 @@ const Home = () => {
 
                     selectVehicle={setVehicleType}
                     setConfirmRidePanel={setConfirmRidePanel}
+
+                    setVehicleType = {setVehicleType}
                 />
             </div>
 
             <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
                 <ConfirmRide
-                    setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
+                    createRide = {createRide}
+                    pickup = {pickup}
+                    destination = {destination}
+                    fare = {fare[vehicleType]}
+                    vehicleType={vehicleType}
+
+                    setVehiclePanel = {setVehiclePanel}
+                    setConfirmRidePanel={setConfirmRidePanel}
+                    setVehicleFound={setVehicleFound} />
             </div>
 
             <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
