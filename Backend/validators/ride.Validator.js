@@ -17,4 +17,18 @@ const createRideValidator = () => {
             .isIn(["auto", "car", "motorcycle"]).withMessage("Vehicle type must be one of auto, car, motorcycle")
     ]
 }
-export {createRideValidator};
+
+const getFareValidator = () => {
+    return[
+        query('pickup')
+            .isString().withMessage('Pickup address must be a string')
+            .bail()
+            .isLength({ min: 3 }).withMessage('Invalid pickup address'),
+        query('destination')
+            .isString().withMessage('Destination address must be a string')
+            .bail()
+            .isLength({ min: 3 }).withMessage('Invalid destination address')
+    ]
+}
+
+export {createRideValidator, getFareValidator};
