@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from "axios"
 
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -16,8 +17,10 @@ import ConfirmRidePopUp from '../components/ConfirmRidePopUp.jsx';
 
 
 const CaptainHome = () => {
-    const [ridePopupPanel, setRidePopupPanel] = useState(true);
+    const [ridePopupPanel, setRidePopupPanel] = useState(false);
     const ridePopupPanelRef = useRef(null)
+
+    const [ride, setRide] = useState(null);
 
     const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false)
     const confirmRidePopupPanelRef = useRef(null)
@@ -62,9 +65,36 @@ useEffect(() => {
 
     socket.on('new-ride', (data) => {
 
-        console.log("New Ride Request Received:", data);
+        // console.log("New Ride Request Received:", data);
+
+        setRide(data)
+        setRidePopupPanel(true)
 
     })
+
+    const confirmRide = async () => {
+       
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/rides/confirm-ride`, 
+            {
+                rideId : ride._id,
+                captainId: captain._id,
+            },
+            {
+                headers : {
+                    Authorization : `Bearer ${authToken}`
+                },
+                withCredentials : true
+            },
+            
+        )
+
+        console.log("frontend response == >", response.data);
+
+        
+
+        setRidePopupPanel(false)
+        setConfirmRidePopupPanel(true)
+    }
 
     useGSAP(function () {
         if (ridePopupPanel) {
@@ -116,6 +146,8 @@ useEffect(() => {
                 <RidePopUp
                     setRidePopupPanel={setRidePopupPanel}
                     setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+                    ride={ride}
+                    confirmRide={confirmRide}
                 />
             </div>
 

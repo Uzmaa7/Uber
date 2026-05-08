@@ -49,11 +49,22 @@ const Home = () => {
     const { user, setUser, authToken, setAuthToken, isAuthReady } = useUserContext()
     const { socket } = useSocketContext()
 
+    const [ride, setRide] = useState(null)
+
     const navigate = useNavigate()
 
     useEffect(() => {
         socket.emit('join', { userId: user._id, userType: 'user' })
     }, [user])
+
+    socket.on('ride-confirmed' , ride => {
+        // console.log('listening')
+        // console.log(ride)
+        setVehicleFound(false)
+        setWaitingForDriver(true)
+        setRide(ride)
+        
+    })
 
 
     const submitHandler = (e) => {
