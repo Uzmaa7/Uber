@@ -61,3 +61,6 @@ const CaptainRiding = () => {
 }
 
 export default CaptainRiding
+
+
+// captainHome -> ride popUp -> confirmRidePopUp(enter OTP) -> CaptainRiding -> FinishRide

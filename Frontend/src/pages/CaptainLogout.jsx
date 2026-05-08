@@ -12,7 +12,7 @@ export const CaptainLogout = () => {
 
     const logout = async () => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/logout` , 
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/logout` , 
                 {
                     headers : {
                         Authorization: `Bearer ${authToken}`

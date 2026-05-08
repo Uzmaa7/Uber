@@ -23,7 +23,7 @@ const CaptainProtectedWrapper = ({children}) => {
 
         //  token exists → validate
 
-        axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile` , {
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/profile` , {
             headers : {
                 Authorization: `Bearer ${authToken}`,
             },

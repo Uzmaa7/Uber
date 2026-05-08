@@ -26,7 +26,7 @@ const CaptainLogin = () => {
     }
 
     // console.log(captainData);
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captain,
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/login`, captain,
       {
           withCredentials : true
         }

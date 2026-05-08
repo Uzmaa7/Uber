@@ -49,7 +49,7 @@ function CaptainSignup() {
         }
 
         // console.log(userData)
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`, captainData)
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/register`, captainData)
 
         // console.log("Captain=>", response);
          if(response.status == 201){

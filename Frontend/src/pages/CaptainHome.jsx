@@ -6,6 +6,8 @@ import gsap from 'gsap'
 
 import { useEffect, useContext } from 'react'
 
+
+
 import CaptainDetails from '../components/CaptainDetails.jsx'
 import RidePopUp from '../components/RidePopUp.jsx'
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp.jsx';

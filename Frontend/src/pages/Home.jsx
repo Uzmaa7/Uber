@@ -127,7 +127,7 @@ const Home = () => {
     const handlePickUpChange = async (e) => {
         setPickup(e.target.value)
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/maps/get-suggestions`, {
                 params : {
                     input : e.target.value
                 },
@@ -147,7 +147,7 @@ const Home = () => {
     const handleDestinationChange = async (e) => {
         setDestination(e.target.value);
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/maps/get-suggestions`, {
                 params : {
                     input : e.target.value
                 },
@@ -170,7 +170,7 @@ const Home = () => {
         setVehiclePanel(true)
 
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rides/get-fare`, {
                 params : {
                     pickup : pickup,
                     destination : destination
@@ -191,7 +191,7 @@ const Home = () => {
     }
 
     const createRide = async () => {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/rides/create`,
             {pickup, destination, vehicleType},
             {
                 headers : {
@@ -314,8 +314,17 @@ const Home = () => {
 
             <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
                 <LookingForDriver
+
+                    pickup = {pickup}
+                    destination = {destination}
+                    setDestination = {setDestination}
+                    setPickup = {setPickup}
+                    
+                    fare = {fare[vehicleType]}
+                    
+                    setVehicleFound = {setVehicleFound}
                     vehicleType={vehicleType}
-                    setVehicleFound={setVehicleFound} />
+                />
             </div>
 
              <div ref={waitingForDriverRef} className='fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12'>
