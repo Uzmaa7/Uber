@@ -4,12 +4,14 @@ dotenv.config({
 })
 import app from "../Backend/app.js";
 import http from "http";
+import { initializeSocket } from "./socket.js";
 import connectDB from "./db/db.js";
 
-
-
-
 const server = http.createServer(app);
+initializeSocket(server);
+
+
+
 const port = process.env.PORT || 3000;
 
 
