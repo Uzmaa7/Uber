@@ -15,10 +15,16 @@ import rideRouter from "./routes/ride.routes.js";
 const app = express();
 
 //middlewares//
+// app.use(cors({
+//     origin: 'http://localhost:5173', // Wildcard '*' ko hata kar apna frontend URL likhein
+//     credentials: true                // Cookies aur headers allow karne ke liye
+// }));
+
 app.use(cors({
-    origin: 'http://localhost:5173', // Wildcard '*' ko hata kar apna frontend URL likhein
-    credentials: true                // Cookies aur headers allow karne ke liye
+  origin: true,
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());

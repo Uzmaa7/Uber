@@ -5,8 +5,11 @@ dotenv.config({
 import axios from 'axios'
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import Captain from "../models/captain.model.js"
 
 const getAddressCoordinateService = async (address) => {
+
+   
 
     const apiKey = process.env.GOOGLE_MAPS_API;
 
@@ -92,4 +95,28 @@ const getAutoCompleteSuggestionsService = async (input) => {
 
 }
 
-export {getAddressCoordinateService, getDistanceTimeService, getAutoCompleteSuggestionsService};
+const getCaptainsInTheRadiusService = async (ltd, lng, radius) => {
+
+    console.log("Finding captains in radius => ", ltd, lng, radius);
+
+    // radius in km
+    const captains = await Captain.find({
+        location : {
+            $geoWithin : {
+                $centerSphere : [[ltd, lng], radius/6371]
+            }
+        }
+    })
+
+    console.log("Captains found => ", captains);
+
+
+    return captains
+}
+
+export {
+    getAddressCoordinateService,
+    getDistanceTimeService, 
+    getAutoCompleteSuggestionsService,
+    getCaptainsInTheRadiusService
+};

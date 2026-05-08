@@ -13,13 +13,14 @@ import WaitingForDriver from '../components/WaitingForDriver';
 
 import { useContext } from 'react';
 import { useUserContext } from '../context/UserContext'
+import { useSocketContext } from '../context/SocketContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const [pickup, setPickup] = useState('')
     const [panelOpen, setPanelOpen] = useState(false)
     const [destination, setDestination] = useState('')
-    
+
 
     const vehiclePanelRef = useRef(null)
     const [vehiclePanel, setVehiclePanel] = useState(false)
@@ -32,20 +33,27 @@ const Home = () => {
     const panelCloseRef = useRef(null)
 
     const vehicleFoundRef = useRef(null)
-     const waitingForDriverRef = useRef(null)
+    const waitingForDriverRef = useRef(null)
 
-    
+
     const [vehicleType, setVehicleType] = useState(null)
     const [confirmRidePanel, setConfirmRidePanel] = useState(false)
     const [vehicleFound, setVehicleFound] = useState(false)
-    const [ waitingForDriver, setWaitingForDriver ] = useState(false)
+    const [waitingForDriver, setWaitingForDriver] = useState(false)
 
-    const {user, setUser, authToken, setAuthToken, isAuthReady } = useUserContext()
-     const [activeField, setActiveField] = useState(null)
-     const [pickUpSuggestions, setPickUpSuggestions] = useState([])
+    const [activeField, setActiveField] = useState(null)
+    const [pickUpSuggestions, setPickUpSuggestions] = useState([])
     const [destinationSuggestions, setDestinationSuggestions] = useState([])
 
+
+    const { user, setUser, authToken, setAuthToken, isAuthReady } = useUserContext()
+    const { socket } = useSocketContext()
+
     const navigate = useNavigate()
+
+    useEffect(() => {
+        socket.emit('join', { userId: user._id, userType: 'user' })
+    }, [user])
 
 
     const submitHandler = (e) => {
@@ -121,20 +129,20 @@ const Home = () => {
                 transform: 'translateY(100%)'
             })
         }
-    }, [ waitingForDriver ])
+    }, [waitingForDriver])
 
 
     const handlePickUpChange = async (e) => {
         setPickup(e.target.value)
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/maps/get-suggestions`, {
-                params : {
-                    input : e.target.value
+                params: {
+                    input: e.target.value
                 },
-                headers : {
-                    Authorization : `Bearer ${authToken}`
+                headers: {
+                    Authorization: `Bearer ${authToken}`
                 },
-                withCredentials : true
+                withCredentials: true
             })
             // console.log("PickUp Suggestions => ", response.data.data)
 
@@ -148,13 +156,13 @@ const Home = () => {
         setDestination(e.target.value);
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/maps/get-suggestions`, {
-                params : {
-                    input : e.target.value
+                params: {
+                    input: e.target.value
                 },
-                headers : {
-                    Authorization : `Bearer ${authToken}`
+                headers: {
+                    Authorization: `Bearer ${authToken}`
                 },
-                withCredentials : true
+                withCredentials: true
             })
 
             // console.log("Destination Suggestions => ", response.data.data)
@@ -171,14 +179,14 @@ const Home = () => {
 
         try {
             const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/v1/rides/get-fare`, {
-                params : {
-                    pickup : pickup,
-                    destination : destination
+                params: {
+                    pickup: pickup,
+                    destination: destination
                 },
-                headers : {
-                    Authorization : `Bearer ${authToken}`
+                headers: {
+                    Authorization: `Bearer ${authToken}`
                 },
-                withCredentials : true
+                withCredentials: true
             })
 
             // console.log('Fare => ', response.data.data.fare)
@@ -192,10 +200,10 @@ const Home = () => {
 
     const createRide = async () => {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/rides/create`,
-            {pickup, destination, vehicleType},
+            { pickup, destination, vehicleType },
             {
-                headers : {
-                    Authorization : `Bearer ${authToken}`
+                headers: {
+                    Authorization: `Bearer ${authToken}`
                 }
             }
         )
@@ -237,7 +245,7 @@ const Home = () => {
                                 setActiveField('pickup')
 
                             }}
-                            onChange = {(e) => handlePickUpChange(e)}
+                            onChange={(e) => handlePickUpChange(e)}
                             value={pickup}
 
                             className='bg-[#eee] px-12 py-2 text-lg rounded-lg w-full'
@@ -251,7 +259,7 @@ const Home = () => {
 
                             }}
 
-                            onChange = {(e) => {handleDestinationChange(e)}}
+                            onChange={(e) => { handleDestinationChange(e) }}
                             value={destination}
 
                             className='bg-[#eee] px-12 py-2 text-lg rounded-lg w-full  mt-3'
@@ -270,11 +278,11 @@ const Home = () => {
                     <LocationSearchPanel
 
                         setPanelOpen={setPanelOpen}
-                        activeField = {activeField}
-                        suggestions = {activeField === 'pickup' ? pickUpSuggestions : destinationSuggestions}
-                        
-                        setPickup = {setPickup}
-                        setDestination = {setDestination}
+                        activeField={activeField}
+                        suggestions={activeField === 'pickup' ? pickUpSuggestions : destinationSuggestions}
+
+                        setPickup={setPickup}
+                        setDestination={setDestination}
 
 
                         setVehiclePanel={setVehiclePanel}
@@ -287,27 +295,27 @@ const Home = () => {
 
             <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12'>
                 <VehiclePanel
-                    fare = {fare}
-                    
+                    fare={fare}
+
                     setVehiclePanel={setVehiclePanel}
                     setPanelOpen={setPanelOpen}
 
                     selectVehicle={setVehicleType}
                     setConfirmRidePanel={setConfirmRidePanel}
 
-                    setVehicleType = {setVehicleType}
+                    setVehicleType={setVehicleType}
                 />
             </div>
 
             <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
                 <ConfirmRide
-                    createRide = {createRide}
-                    pickup = {pickup}
-                    destination = {destination}
-                    fare = {fare[vehicleType]}
+                    createRide={createRide}
+                    pickup={pickup}
+                    destination={destination}
+                    fare={fare[vehicleType]}
                     vehicleType={vehicleType}
 
-                    setVehiclePanel = {setVehiclePanel}
+                    setVehiclePanel={setVehiclePanel}
                     setConfirmRidePanel={setConfirmRidePanel}
                     setVehicleFound={setVehicleFound} />
             </div>
@@ -315,21 +323,21 @@ const Home = () => {
             <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>
                 <LookingForDriver
 
-                    pickup = {pickup}
-                    destination = {destination}
-                    setDestination = {setDestination}
-                    setPickup = {setPickup}
-                    
-                    fare = {fare[vehicleType]}
-                    
-                    setVehicleFound = {setVehicleFound}
+                    pickup={pickup}
+                    destination={destination}
+                    setDestination={setDestination}
+                    setPickup={setPickup}
+
+                    fare={fare[vehicleType]}
+
+                    setVehicleFound={setVehicleFound}
                     vehicleType={vehicleType}
                 />
             </div>
 
-             <div ref={waitingForDriverRef} className='fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12'>
+            <div ref={waitingForDriverRef} className='fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12'>
                 <WaitingForDriver
-                    
+
                     setVehicleFound={setVehicleFound}
                     setWaitingForDriver={setWaitingForDriver}
                     waitingForDriver={waitingForDriver} />
