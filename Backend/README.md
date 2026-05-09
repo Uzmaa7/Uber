@@ -361,3 +361,369 @@ No request body required.
 }
 ```
 
+## Get Coordinates Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/maps/get-coordinates`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint retrieves the latitude and longitude coordinates for a given address.
+
+### Query Parameters
+- `address` (string, required): The address to get coordinates for, minimum 3 characters.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "coordinates": {
+      "lat": 37.7749,
+      "lng": -122.4194
+    }
+  },
+  "message": "Co-ordinates fetched successfully",
+  "success": true
+}
+```
+
+#### Error (404 Not Found)
+```json
+{
+  "statusCode": 404,
+  "message": "Co-ordinates not found!",
+  "success": false
+}
+```
+
+## Get Distance and Time Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/maps/get-distance-time`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint calculates the distance and estimated travel time between two locations.
+
+### Query Parameters
+- `origin` (string, required): The starting address, minimum 3 characters.
+- `destination` (string, required): The destination address, minimum 3 characters.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "distanceTime": {
+      "distance": {
+        "text": "10.5 km",
+        "value": 10500
+      },
+      "duration": {
+        "text": "15 mins",
+        "value": 900
+      }
+    }
+  },
+  "message": "Distance and Time fetched successfully",
+  "success": true
+}
+```
+
+## Get Auto-Complete Suggestions Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/maps/get-suggestions`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint provides auto-complete suggestions for addresses based on user input.
+
+### Query Parameters
+- `input` (string, required): The partial address input, minimum 3 characters.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "suggestions": [
+      {
+        "description": "San Francisco, CA, USA",
+        "place_id": "ChIJIQBpAG2ahYAR_6128GcTjz0"
+      },
+      {
+        "description": "San Francisco International Airport (SFO), San Francisco, CA, USA",
+        "place_id": "ChIJVVVVVYqAhYARXebK-0tQXcI"
+      }
+    ]
+  },
+  "message": "Auto-complete suggestions fetched successfully",
+  "success": true
+}
+```
+
+## Create Ride Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/rides/create`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint allows users to create a new ride request by specifying pickup location, destination, and vehicle type.
+
+### Request Body
+The request must be in JSON format with the following fields:
+
+- `pickup` (string, required): Pickup location, minimum 3 characters.
+- `destination` (string, required): Destination location, minimum 3 characters.
+- `vehicleType` (string, required): One of "auto", "car", or "motorcycle".
+
+### Response
+
+#### Success (201 Created)
+```json
+{
+  "statusCode": 201,
+  "data": {
+    "ride": {
+      "_id": "ride_id",
+      "user": "user_id",
+      "captain": null,
+      "pickup": "San Francisco",
+      "destination": "Los Angeles",
+      "fare": 150,
+      "status": "pending",
+      "duration": 900,
+      "distance": 10500,
+      "paymentID": null,
+      "orderId": null,
+      "signature": null,
+      "otp": "123456",
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    }
+  },
+  "message": "Ride created successfully",
+  "success": true
+}
+```
+
+## Get Fare Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/rides/get-fare`
+
+### Authentication
+Requires a valid JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint calculates the fare for a ride based on pickup and destination locations.
+
+### Query Parameters
+- `pickup` (string, required): Pickup address, minimum 3 characters.
+- `destination` (string, required): Destination address, minimum 3 characters.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "fare": {
+      "auto": 50,
+      "car": 100,
+      "motorcycle": 30
+    }
+  },
+  "message": "Fare calculated successfully",
+  "success": true
+}
+```
+
+## Confirm Ride Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/rides/confirm-ride`
+
+### Authentication
+Requires a valid captain JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint allows captains to confirm a ride request.
+
+### Request Body
+The request must be in JSON format with the following fields:
+
+- `rideId` (string, required): The ID of the ride to confirm, must be a valid MongoDB ObjectId.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "ride": {
+      "_id": "ride_id",
+      "user": "user_id",
+      "captain": "captain_id",
+      "pickup": "San Francisco",
+      "destination": "Los Angeles",
+      "fare": 100,
+      "status": "accepted",
+      "duration": 900,
+      "distance": 10500,
+      "paymentID": null,
+      "orderId": null,
+      "signature": null,
+      "otp": "123456",
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    }
+  },
+  "message": "Ride confirmed successfully",
+  "success": true
+}
+```
+
+#### Error (404 Not Found)
+```json
+{
+  "statusCode": 404,
+  "message": "Ride not found or already confirmed",
+  "success": false
+}
+```
+
+## Start Ride Endpoint
+
+### HTTP METHOD
+`GET`
+
+### Endpoint
+`/api/v1/rides/start-ride`
+
+### Authentication
+Requires a valid captain JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint allows captains to start a ride by providing the OTP.
+
+### Query Parameters
+- `otp` (string, required): The 6-digit OTP for the ride.
+- `rideId` (string, required): The ID of the ride to start, must be a valid MongoDB ObjectId.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "ride": {
+      "_id": "ride_id",
+      "user": "user_id",
+      "captain": "captain_id",
+      "pickup": "San Francisco",
+      "destination": "Los Angeles",
+      "fare": 100,
+      "status": "ongoing",
+      "duration": 900,
+      "distance": 10500,
+      "paymentID": null,
+      "orderId": null,
+      "signature": null,
+      "otp": "123456",
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    }
+  },
+  "message": "Ride started!! Happy Journey",
+  "success": true
+}
+```
+
+## End Ride Endpoint
+
+### HTTP METHOD
+`POST`
+
+### Endpoint
+`/api/v1/rides/end-ride`
+
+### Authentication
+Requires a valid captain JWT access token (via cookies or Authorization header).
+
+### Description
+This endpoint allows captains to end a ride.
+
+### Request Body
+The request must be in JSON format with the following fields:
+
+- `rideId` (string, required): The ID of the ride to end, must be a valid MongoDB ObjectId.
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "statusCode": 200,
+  "data": {
+    "ride": {
+      "_id": "ride_id",
+      "user": "user_id",
+      "captain": "captain_id",
+      "pickup": "San Francisco",
+      "destination": "Los Angeles",
+      "fare": 100,
+      "status": "completed",
+      "duration": 900,
+      "distance": 10500,
+      "paymentID": null,
+      "orderId": null,
+      "signature": null,
+      "otp": "123456",
+      "createdAt": "2023-10-01T00:00:00.000Z",
+      "updatedAt": "2023-10-01T00:00:00.000Z"
+    }
+  },
+  "message": "Ride Ended",
+  "success": true
+}
+```
+
