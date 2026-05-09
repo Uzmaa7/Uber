@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { createRideService, confirmRideService , startRideService} from "../services/ride.service.js";
+import { createRideService, confirmRideService , startRideService, endRideService} from "../services/ride.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { getFare } from "../services/ride.service.js";
 import { getAddressCoordinateService, getCaptainsInTheRadiusService } from "../services/map.service.js";
@@ -118,6 +118,26 @@ const startRide = asyncHandler(async (req, res) => {
         return res.status(500).json(new ApiError(500, 'Server Error while starting the ride'));
     }
 })
+
+const endRide = asyncHandler(async (req, res) => {
+    
+
+    const {rideId} = req.body
+
+    try {
+        const ride = await endRideService({ rideId, captain: req.captain });
+
+        sendMessageToSocketId(ride.user.socketId, {
+            event : 'ride-ended',
+            data : ride
+        })
+
+        return res.status(200).json(new ApiResponse(200,  {ride : ride}, 'Ride Ended'))
+
+    } catch (error) {
+        return res.status(500).json(new ApiError(500, 'Server Error while ending the ride'));
+    }
+})
       
 
-export { createRide, getTheFare, confirmRide, startRide };
+export { createRide, getTheFare, confirmRide, startRide, endRide };

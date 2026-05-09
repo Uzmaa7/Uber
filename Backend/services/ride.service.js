@@ -249,3 +249,90 @@ export const startRideService  = async({rideId, otp, captain}) => {
 
     return ride[0];
 }
+
+export const endRideService = async({rideId , captain}) => {
+    if(!rideId){
+        throw new ApiError(400, 'rideId is required') 
+    }
+
+    const ride = await Ride.aggregate([
+        {
+            $match : {
+                _id : new mongoose.Types.ObjectId(rideId),
+                captain : captain._id
+            }
+        },
+        {
+            $lookup : {
+                from : 'captains',
+                localField : 'captain',
+                foreignField : '_id',
+                as : 'captain',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            contact : 1,
+                            email : 1,
+                            socketId : 1,
+                            vehicle : 1,
+                            location : 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $unwind : '$captain'
+        },
+        {
+            $lookup : {
+                from : 'users',
+                localField : 'user',
+                foreignField : '_id',
+                as : 'user',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            email : 1,
+                            socketId : 1
+                        }
+                    }  
+                ]
+            }
+        },{
+            $unwind : '$user'
+        },
+        {
+            $project : {
+                pickup : 1,
+                destination : 1,
+                fare : 1,
+                status : 1,
+                otp : 1,
+                distance : 1,
+                duration : 1,
+                createdAt : 1,
+                user : 1,
+                captain : 1
+            }
+        }
+    ])
+
+    if(!ride || ride.length === 0){
+        throw new ApiError(404, 'Ride not found')
+    }
+
+    if(ride[0].status !== 'ongoing'){
+        throw new ApiError(400, 'Ride is not ongoing')
+    }
+
+    await Ride.findByIdAndUpdate(rideId, 
+        {
+            status : 'completed'
+        }
+    )
+
+    return ride[0];
+}
