@@ -31,4 +31,20 @@ const getFareValidator = () => {
     ]
 }
 
-export {createRideValidator, getFareValidator};
+const idValidator = () => {
+    return[
+        body("rideId")
+            .isMongoId().withMessage("Invalid id")
+    ]
+}
+
+const otpValidator = () => {
+    return[
+        query("otp")
+            .isString().withMessage("OTP must be a string")
+            .isLength({min:6, max:6}).withMessage("OTP must be 6 characters long"),
+        query("rideId")
+            .isMongoId().withMessage("Invalid id")
+    ]
+}
+ export {createRideValidator, getFareValidator, idValidator, otpValidator};

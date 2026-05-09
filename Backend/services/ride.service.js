@@ -4,6 +4,7 @@ import {getDistanceTimeService} from "../services/map.service.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { ApiError } from "../utils/ApiError.js";
+import mongoose from "mongoose";
 
 export async function getFare(pickup, destination) {
 
@@ -72,4 +73,179 @@ export const createRideService = async ({userId, pickup, destination, vehicleTyp
     })
 
     return ride;
+}
+
+export const confirmRideService = async( {rideId, captain}) => {
+    if(!rideId){
+        throw new ApiError(400, 'RideId is required')
+    }
+
+    await Ride.findOneAndUpdate(
+        {
+            _id : rideId
+        },
+        {
+            status : 'accepted',
+            captain : captain._id
+        }
+    )
+
+    const ride = await Ride.aggregate([
+        {
+            $match : { _id : new mongoose.Types.ObjectId(rideId) }
+        },
+        {
+            $lookup : {
+                from : 'users',
+                localField : 'user',
+                foreignField : '_id',
+                as : 'user',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            email : 1,
+                            socketId : 1
+                        }
+                    }  
+                ]
+            }
+        },{
+            $unwind : '$user'
+        },
+        {
+            $lookup : {
+                from : 'captains',
+                localField : 'captain',
+                foreignField : '_id',
+                as : 'captain',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            contact : 1,
+                            email : 1,
+                            socketId : 1,
+                            vehicle : 1,
+                            location : 1
+                        }
+                    }  
+                ]
+            }
+        },
+        {
+            $unwind : '$captain'
+        },{
+            $project : {
+                pickup : 1,
+                destination : 1,
+                fare : 1,
+                status : 1,
+                otp : 1,
+                distance : 1,
+                duration : 1,
+                createdAt : 1,
+                user : 1,
+                captain : 1
+            }
+        }
+    ])
+
+    // console.log(ride)
+
+    if(!ride || ride.length === 0){
+        throw new ApiError(404, 'Ride not found')
+    }
+    
+    return ride[0]
+}
+
+export const startRideService  = async({rideId, otp, captain}) => {
+    if(!rideId || !otp){
+        throw new ApiError(400, 'RideId and Opt are required');
+    }
+
+    const ride = await Ride.aggregate([
+        {
+            $match : {
+                _id : new mongoose.Types.ObjectId(rideId)
+            }
+        },
+        {
+            $lookup : {
+                from : 'users',
+                localField : 'user',
+                foreignField : '_id',
+                as : 'user',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            email : 1,
+                            socketId : 1
+                        }
+                    }  
+                ]
+            }
+        },{
+            $unwind : '$user'
+        },
+        {
+            $lookup : {
+                from : 'captains',
+                localField : 'captain',
+                foreignField : '_id',
+                as : 'captain',
+                pipeline : [
+                    {
+                        $project : {
+                            fullname : 1,
+                            contact : 1,
+                            email : 1,
+                            socketId : 1,
+                            vehicle : 1,
+                            location : 1
+                        }
+                    }  
+                ]
+            }
+        },
+        {
+            $unwind : '$captain'
+        },
+        {
+            $project : {
+                pickup : 1,
+                destination : 1,
+                fare : 1,
+                status : 1,
+                otp : 1,
+                distance : 1,
+                duration : 1,
+                createdAt : 1,
+                user : 1,
+                captain : 1
+            }
+        }
+    ])
+
+    if(!ride || ride.length === 0){
+         throw new ApiError(404, 'Ride not found')
+    }
+
+    if(ride[0].status !== 'accepted'){
+         throw new ApiError(404, 'Ride not accepted')
+    }
+
+    if(ride[0].otp !== otp){
+         throw new ApiError(400, 'Invalid Otp')
+    }
+
+    await Ride.findByIdAndUpdate(rideId, 
+        {
+            status : 'ongoing'
+        }
+    )
+
+    return ride[0];
 }

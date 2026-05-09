@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { createRideService } from "../services/ride.service.js";
+import { createRideService, confirmRideService , startRideService} from "../services/ride.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { getFare } from "../services/ride.service.js";
 import { getAddressCoordinateService, getCaptainsInTheRadiusService } from "../services/map.service.js";
@@ -65,4 +65,59 @@ const getTheFare = asyncHandler(async (req, res) => {
   }
 });
 
-export { createRide, getTheFare };
+const confirmRide = asyncHandler(async (req, res) => {
+    
+    
+
+    const {rideId} = req.body
+    
+    try {
+        
+        const ride = await confirmRideService({ rideId, captain: req.captain });
+
+        if(!ride){
+            return res.status(404).json(new ApiError(404, {}, 'Ride not found or already confirmed'));
+        }
+
+        sendMessageToSocketId(ride.user.socketId, {
+            event : 'ride-confirmed',
+            data : ride
+        })
+
+        
+        
+        return res.status(200).json(new ApiResponse(200, { ride }, 'Ride confirmed successfully'));
+
+    } catch (error) {
+        return res.status(500).json(new ApiError(500, 'Server Error While confirming the ride'));
+    }
+})
+
+const startRide = asyncHandler(async (req, res) => {
+    
+    const {otp, rideId} = req.query;
+
+    if(!rideId || !otp ){
+        throw new ApiError(400, 'RideId and Opt are required');
+    }
+
+     try {
+        const ride = await startRideService({rideId, otp, captain : req.captain})
+        // console.log("in the ride controller" , ride)
+
+        sendMessageToSocketId(ride.user.socketId,
+            {
+                event : 'ride-started',
+                data : ride
+            }
+        )
+
+        return res.status(200).json(new ApiResponse(200,  {ride : ride}, 'Ride started!! Happy Journey'))
+
+    } catch (error) {
+        return res.status(500).json(new ApiError(500, 'Server Error while starting the ride'));
+    }
+})
+      
+
+export { createRide, getTheFare, confirmRide, startRide };
