@@ -66,6 +66,12 @@ const Home = () => {
         
     })
 
+    socket.on('ride-started' , ride => {
+        // console.log(ride);
+        setWaitingForDriver(false);
+        navigate('/riding' , {state : {ride}})
+    })
+
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -348,6 +354,8 @@ const Home = () => {
 
             <div ref={waitingForDriverRef} className='fixed w-full  z-10 bottom-0  bg-white px-3 py-6 pt-12'>
                 <WaitingForDriver
+
+                    ride={ride}
 
                     setVehicleFound={setVehicleFound}
                     setWaitingForDriver={setWaitingForDriver}
